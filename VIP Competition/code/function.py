@@ -56,6 +56,13 @@ def rename(df,old,new):
     return df
 
 def getUserFeature(df,users,name='spu_id',num_weeks=1):
+    """
+    :param df: 某一个连续时间窗口周 ： 数据【0～9】周数据 【1～10】周数据
+    :param users: 用户唯一id
+    :param name:  ['spu_id','brand_id','cat_id'] 其中之一
+    :param num_weeks: 时间窗口为 9
+    :return:
+    """
     weeks = '_'+str(num_weeks)
     ##用户点击数目
     user = users[['uid']]
@@ -64,21 +71,28 @@ def getUserFeature(df,users,name='spu_id',num_weeks=1):
     user = pd.merge(user,mydf,on='uid',how='left')
     
     ##用户购买数目/比率
+    # 用户购买的次数
     mydf = df.groupby(['uid',])['label'].sum().reset_index()
     mydf = rename(mydf,'label','user_buy_'+name+'_counts'+weeks)
     user = pd.merge(user,mydf,on=['uid'],how='left')
+    # 购买/点击
     user['user_buy_'+name+'_rate'+weeks] = user['user_buy_'+name+'_counts'+weeks] / user['user_click_'+name+'_counts'+weeks]
-    user['user_not_buy_'+name+'_rate'+weeks] = 1 - user['user_buy_'+name+'_rate'+weeks] 
+    user['user_not_buy_'+name+'_rate'+weeks] = 1 - user['user_buy_'+name+'_rate'+weeks]
+    # 用户点击不购买的次数、瞎点击
     user['user_not_buy_'+name+'_counts'+weeks] =  user['user_click_'+name+'_counts'+weeks] - user['user_buy_'+name+'_counts'+weeks]
     ###用户点击商品种类数/比率
+
+    #用户点击的种类
     mydf = df.groupby(['uid',name]).size().reset_index()
     mydf = mydf.groupby(['uid']).size().reset_index()
     mydf = rename(mydf,0,'user_click_'+name+'_kinds'+weeks)
-    
+    # 购买的用户点击种类数
     pos = df[df.label==1]
     mydf1 = pos.groupby(['uid',name]).size().reset_index()
     mydf1 = mydf1.groupby(['uid']).size().reset_index()
     mydf1 = rename(mydf1,0,'user_buy_'+name+'_kinds'+weeks)
+
+
     mydf = pd.merge(mydf,mydf1,on=['uid'],how='left')
     mydf['user_buy_kind_'+name+'_rate'+weeks] = mydf['user_buy_'+name+'_kinds'+weeks] / mydf['user_click_'+name+'_kinds'+weeks]
     mydf['user_not_buy_kind_'+name+'_rate'+weeks] = 1 - mydf['user_buy_kind_'+name+'_rate'+weeks]
@@ -148,6 +162,10 @@ def getGoodFeature(df,spu,name,num_weeks):
     return spu
 
 def getTrickFeature(df):
+    """
+    :param df:
+    :return: 统计某周的用户行为次数 商品出现次数 类别特征
+    """
     mydf = df.groupby('uid').size().reset_index()
     mydf = rename(mydf,0,'user_this_week_click')
     df = pd.merge(df,mydf,on='uid',how='left')
@@ -198,7 +216,7 @@ def getWindowFeature(df,windows,num_weeks,config):
         if config['trick']:
             trick = getTrickFeature(temp)
             trick['week'] = week
-            
+
         weeklst = range(week+1,week+num_weeks+1)
         temp2 = df[df.week.isin(weeklst)]
         

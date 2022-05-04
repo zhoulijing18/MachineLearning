@@ -41,3 +41,49 @@ numpy
 ##### imp存放特征重要性文件（要执行程序之前建好）<br>
 
 
+特征类别	特征名	特征说明	训练说明
+基本特征	
+u_id	用户唯一标识
+spu_id	商品唯一标识
+brand_id	商品所属的品牌标识
+cat_id	商品所属的品类标识
+
+人的特征	
+u_buy_num	购买次数
+u_click_num	点击次数
+u_buy_date	购买天数
+u_click_date	点击天数
+u_num_ratio	购买点击次数比，购买次数/点击次数
+u_date_ratio	购买点击天数比，购买天数/点击天数
+u_buy_freq	购买频率，购买次数/90天
+u_click_freq	点击频率，购买次数/90天
+
+商品的特征	
+spu_buy_num	购买次数
+spu_click_num	点击次数
+spu_buy_date	购买天数
+spu_click_date	点击天数
+spu_num_ratio	购买点击次数比，购买次数/点击次数
+spu_date_ratio	购买点击天数比，购买天数/点击天数
+spu_buy_freq	购买频率，购买次数/90天
+spu_click_freq	点击频率，购买次数/90天
+
+品牌的特征	
+brand_buy_num	购买次数
+brand_click_num	点击次数
+brand_buy_date	购买天数
+brand_click_date	点击天数
+brand_num_ratio	购买点击次数比，购买次数/点击次数
+brand_date_ratio	购买点击天数比，购买天数/点击天数
+brand_buy_freq	购买频率，购买次数/90天
+brand_click_freq	点击频率，购买次数/90天
+品类的特征	
+cat_buy_num	购买次数
+cat_click_num	点击次数
+cat_buy_date	购买天数
+cat_click_date	点击天数
+cat_num_ratio	购买点击次数比，购买次数/点击次数
+cat_date_ratio	购买点击天数比，购买天数/点击天数
+cat_buy_freq	购买频率，购买次数/90天
+cat_click_freq	点击频率，购买次数/90天
+
